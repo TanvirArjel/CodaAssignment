@@ -17,7 +17,7 @@ This is project is actually a load balancer api (Routing API) project where we h
 5. #### Round Robin load balancer
     that that actually helps to find a server to handle current request in round robin manner.
 
-## How run to run
+## How to run
 Before the running the application api, load balancer api should be run first so that application api can make request to the load balancer api to be registered to the server pool.
 
 ## API Documentation
