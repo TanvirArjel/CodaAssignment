@@ -38,19 +38,13 @@ public class GameLoadBalancingController {
     @PostMapping("/play-game")
     public ResponseEntity<?> play(@RequestBody @Valid PlayGameRequestModel playGameModel, BindingResult result)
             throws JsonProcessingException, NoServerAvailableException {
-        try {
-
-            if (result.hasErrors()) {
-                logger.error("Validation errors occurred: " + result.getAllErrors());
-                return ResponseEntity.badRequest().body(result.getAllErrors());
-            }
-
-            ResponseEntity<?> response = gameService.playGame(playGameModel);
-
-            return response;
-        } catch (Exception exception) {
-            logger.error("Error while processing play game request: " + exception.getMessage(), exception);
-            return ResponseEntity.internalServerError().body("Something went wrong. Please try again later.");
+        if (result.hasErrors()) {
+            logger.error("Validation errors occurred: " + result.getAllErrors());
+            return ResponseEntity.badRequest().body(result.getAllErrors());
         }
+
+        ResponseEntity<?> response = gameService.playGame(playGameModel);
+
+        return response;
     }
 }

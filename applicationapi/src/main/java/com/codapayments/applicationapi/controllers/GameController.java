@@ -30,21 +30,16 @@ public class GameController {
     })
     @PostMapping("/play-game")
     public ResponseEntity<?> play(@RequestBody @Valid PlayGameRequestModel playGameModel, BindingResult bindingResult) {
-        try {
-            if (bindingResult.hasErrors()) {
-                logger.error("Validation errors: " + bindingResult.getAllErrors());
-                return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-            }
-
-            PlayGameResponseModel response = new PlayGameResponseModel(
-                    playGameModel.getGameId(),
-                    playGameModel.getPlayerId(),
-                    playGameModel.getPoints());
-
-            return ResponseEntity.ok(response);
-        } catch (Exception exception) {
-            logger.error("Error while processing play game request: " + exception.getMessage(), exception);
-            return ResponseEntity.internalServerError().body("Something went wrong. Please try again later.");
+        if (bindingResult.hasErrors()) {
+            logger.error("Validation errors: " + bindingResult.getAllErrors());
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
+
+        PlayGameResponseModel response = new PlayGameResponseModel(
+                playGameModel.getGameId(),
+                playGameModel.getPlayerId(),
+                playGameModel.getPoints());
+
+        return ResponseEntity.ok(response);
     }
 }

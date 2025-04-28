@@ -30,14 +30,7 @@ public class ServerPoolController {
     @Operation(summary = "Get the list of active servers.", description = "Returns a list of servers in server pool.")
     @GetMapping()
     public ResponseEntity<?> getList() {
-        // Logic to list all servers in the pool
-        try {
-            return ResponseEntity.ok(serverPool.getServers());
-        } catch (Exception exception) {
-            logger.error("Error while getting the list of servers: " + exception.getMessage());
-            return ResponseEntity.internalServerError()
-                    .body("Something went wrong while getting the list of servers.");
-        }
+        return ResponseEntity.ok(serverPool.getServers());
     }
 
     @Operation(summary = "Add a new server to the server pool.", description = "Add a new server with the provided information.")
@@ -49,20 +42,15 @@ public class ServerPoolController {
     public ResponseEntity<?> addServer(@RequestBody @Valid AddServerRequestModel serverModel,
             BindingResult bindingResult)
             throws Exception {
-        try {
-            if (bindingResult.hasErrors()) {
-                logger.error("Validation error while adding server to the pool: " + bindingResult.getAllErrors());
-                return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-            }
-
-            Server server = new Server(serverModel.getName(), serverModel.getIpAddress(), serverModel.getPort(),
-                    serverModel.getBaseUrl());
-
-            serverPool.addServer(server);
-            return ResponseEntity.ok().build();
-        } catch (Exception exception) {
-            logger.error("Error while adding server to the pool: " + exception.getMessage());
-            return ResponseEntity.internalServerError().body("Something went wrong while adding server to the pool.");
+        if (bindingResult.hasErrors()) {
+            logger.error("Validation error while adding server to the pool: " + bindingResult.getAllErrors());
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
+
+        Server server = new Server(serverModel.getName(), serverModel.getIpAddress(), serverModel.getPort(),
+                serverModel.getBaseUrl());
+
+        serverPool.addServer(server);
+        return ResponseEntity.ok().build();
     }
 }
